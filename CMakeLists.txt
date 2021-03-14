@@ -2,7 +2,12 @@ cmake_minimum_required(VERSION 2.8.12)
 project(turbodbc_intern CXX)
 
 # Take precedence over system modules
-list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake_scripts)
+list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts)
+
+include(FetchContent)
+if(${CMAKE_VERSION} VERSION_LESS 3.14)
+  include(cmake/add_FetchContent_MakeAvailable.cmake)
+endif()
 
 include(default_build_setup)
 
@@ -11,16 +16,8 @@ include(default_build_setup)
 # versions, rely on the CMake built-in.
 set(Boost_NO_BOOST_CMAKE ON)
 
-add_subdirectory(pybind11)
+find_package(pybind11)
 find_package(GTest)
-if (GTest_FOUND OR GTEST_FOUND)
-  include_directories(${GTEST_INCLUDE_DIR})
-else()
-  add_subdirectory(google_test)
-  set(GTEST_LIBRARY gtest)
-  set(GMOCK_LIBRARY gmock)
-  set(GMOCK_MAIN_LIBRARY gmock_main)
-endif()
 add_subdirectory(cpp)
 add_subdirectory(python)
 add_subdirectory(docs)

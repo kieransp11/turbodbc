@@ -1,9 +1,25 @@
 add_subdirectory(cpp_odbc)
 add_subdirectory(turbodbc)
 add_subdirectory(turbodbc_python)
-add_subdirectory(turbodbc_numpy)
+
+# This should in theory be optional
+# if (Numpy_INCLUDE_DIR)
+  add_subdirectory(turbodbc_numpy)
+# endif()
 
 find_package(Arrow)
+# Have to use the conda install
+# if (NOT ARROW_FOUND)
+#   message(STATUS "Failed to find arrow using pkg-config and ${ARROW_HOME}. Searching using system.")
+#   find_package(Arrow)
+#   set(ARROW_FOUND "${Arrow_FOUND}")
+#   set(ARROW_INCLUDE_DIR "${ARROW_INCLUDE_DIR}")
+#   set(ARROW_LIB_DIR "${ARROW_LIB_DIR}")
+#   set(ARROW_FULL_SO_VERSION "${ARROW_FULL_SO_VERSION}")
+#   set(ARROW_SO_VERSION "${ARROW_SO_VERSION}")
+#   message(STATUS "=================================================================================")
+#   message(STATUS "1)${ARROW_FOUND} 2)${ARROW_INCLUDE_DIR} 3)${ARROW_LIB_DIR}")
+# endif()
 if (ARROW_FOUND)
   add_subdirectory(turbodbc_arrow)
 endif()

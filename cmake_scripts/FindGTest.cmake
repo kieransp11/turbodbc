@@ -292,3 +292,24 @@ if(GTEST_FOUND)
         __gtest_import_library(GMock::Main GMOCK_MAIN_LIBRARY "DEBUG")
     endif()
 endif()
+
+get_filename_component(gtest_path "${CMAKE_CURRENT_SOURCE_DIR}/google_test" ABSOLUTE)
+
+if (GTest_FOUND OR GTEST_FOUND)
+    message(STATUS "Using local install of GTest")
+    include_directories(${GTEST_INCLUDE_DIR})
+elseif(EXISTS ${gtest_path} AND IS_DIRECTORY ${gtest_path})
+    message(STATUS "Using submodule GTest")
+    add_subdirectory(${gtest_path})
+    set(GTEST_LIBRARY gtest)
+    set(GMOCK_LIBRARY gmock)
+    set(GMOCK_MAIN_LIBRARY gmock_main)
+else()
+    message(STATUS "Including GTest via FethContent")
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG        release-1.8.0
+    )
+    FetchContent_MakeAvailable(googletest)
+endif()
